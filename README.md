@@ -192,6 +192,12 @@ NODE_ENV=development
 ### 5. Inisialisasi Database
 Pastikan modul MySQL pada aplikasi XAMPP Anda **sudah berjalan (START)**.
 Jalankan deretan script berikut secara berurutan:
+
+> **Catatan Penting (Pengguna Windows/XAMPP):**
+> Jika perintah `mysql` memunculkan error *"mysql is not recognized"*, Anda memiliki dua pilihan:
+> 1. Tambahkan `C:\xampp\mysql\bin` ke dalam *Environment Variables (PATH)* Windows Anda, **ATAU**
+> 2. Buka **phpMyAdmin** (http://localhost/phpmyadmin), buat database baru bernama `kos_id`, lalu *Import* file `database/schema.sql` dan `database/seed.sql` secara manual melalui menu Import di sana. (Jika memakai cara ini, lewati langkah a dan b di bawah).
+
 ```bash
 # a. Buat struktur tabel dan schema
 mysql -u root < database/schema.sql

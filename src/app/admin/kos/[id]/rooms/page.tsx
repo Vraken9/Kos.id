@@ -49,7 +49,7 @@ export default function RoomsPage() {
     fetch('/api/admin/facilities')
       .then(res => res.json())
       .then(json => {
-        if (json.success) setFacilitiesList(json.data.filter((f: any) => f.scope === 'room' || f.scope === 'both'));
+        if (json.success) setFacilitiesList(json.data);
       })
       .catch(console.error);
   }, [kosId]);
@@ -250,21 +250,27 @@ export default function RoomsPage() {
 
             <div className="space-y-2 pt-2 border-t">
               <Label>Fasilitas Kamar</Label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {facilitiesList.map(f => (
-                  <label key={f.id} className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={form.facilityIds.includes(f.id)}
-                      onChange={e => {
-                        if (e.target.checked) setForm(prev => ({ ...prev, facilityIds: [...prev.facilityIds, f.id] }));
-                        else setForm(prev => ({ ...prev, facilityIds: prev.facilityIds.filter(id => id !== f.id) }));
+              <div className="flex flex-wrap gap-2">
+                {facilitiesList.map(f => {
+                  const isSelected = form.facilityIds.includes(f.id);
+                  return (
+                    <button
+                      key={f.id}
+                      type="button"
+                      onClick={() => {
+                        if (isSelected) setForm(prev => ({ ...prev, facilityIds: prev.facilityIds.filter(id => id !== f.id) }));
+                        else setForm(prev => ({ ...prev, facilityIds: [...prev.facilityIds, f.id] }));
                       }}
-                      className="rounded"
-                    />
-                    <span className="text-sm">{f.name}</span>
-                  </label>
-                ))}
+                      className={`px-3 py-1.5 rounded-full text-sm border transition-all duration-200 ${
+                        isSelected 
+                          ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm' 
+                          : 'bg-white border-gray-200 text-gray-600 hover:border-emerald-300 hover:bg-emerald-50/50'
+                      }`}
+                    >
+                      {f.name}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
