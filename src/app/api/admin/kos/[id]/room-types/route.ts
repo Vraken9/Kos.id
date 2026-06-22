@@ -1,20 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { query, getConnection } from '@/lib/db';
+import { query, getConnection, queryOne } from '@/lib/db';
 import { requireAdmin, adminErrorResponse } from '@/lib/auth';
 import { roomTypeCreateSchema } from '@/lib/validation';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await requireAdmin();
-    const { id: kosId } = await params;
+    const resolvedParams = await params;
+    const kosId = parseInt(resolvedParams.id, 10);
+    if (isNaN(kosId)) {
+      return NextResponse.json({ success: false, error: { message: 'ID Kos tidak valid' } }, { status: 400 });
+    }
 
     const roomTypes = await query<Record<string, unknown>[]>(
       `SELECT rt.*, 
-        (SELECT GROUP_CONCAT(f.id) FROM room_type_facilities rtf JOIN facilities f ON f.id = rtf.facility_id WHERE rtf.room_type_id = rt.id) AS facility_ids
-       FROM room_types rt WHERE rt.kos_id = ? ORDER BY rt.created_at ASC`,
+        (
+          SELECT JSON_ARRAYAGG(JSON_OBJECT('id', f.id, 'name', f.name))
+          FROM room_type_facilities rtf
+          JOIN facilities f ON rtf.facility_id = f.id
+          WHERE rtf.room_type_id = rt.id
+        ) as facilities
+       FROM room_types rt
+       WHERE rt.kos_id = ?
+       ORDER BY rt.created_at ASC`,
       [kosId]
     );
 
@@ -24,13 +32,15 @@ export async function GET(
   }
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await requireAdmin();
-    const { id: kosId } = await params;
+    const resolvedParams = await params;
+    const kosId = parseInt(resolvedParams.id, 10);
+    if (isNaN(kosId)) {
+      return NextResponse.json({ success: false, error: { message: 'ID Kos tidak valid' } }, { status: 400 });
+    }
+
     const body = await request.json();
     const parsed = roomTypeCreateSchema.safeParse(body);
 
@@ -42,16 +52,19 @@ export async function POST(
     }
 
     const data = parsed.data;
+
+    // Verify kos exists
+    const kos = await queryOne<{ id: number }>('SELECT id FROM kos WHERE id = ?', [kosId]);
+    if (!kos) {
+      return NextResponse.json({ success: false, error: { message: 'Kos tidak ditemukan' } }, { status: 404 });
+    }
+
     const conn = await getConnection();
     try {
       const [result] = await conn.execute(
-        `INSERT INTO room_types (kos_id, name, description, price_monthly, stock_total, stock_available, 
-         room_size, bathroom_type, electricity_type, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          kosId, data.name, data.description || null, data.priceMonthly,
-          data.stockTotal, data.stockAvailable, data.roomSize || null,
-          data.bathroomType, data.electricityType, data.isActive ? 1 : 0,
-        ]
+        `INSERT INTO room_types (kos_id, name, description, price_monthly, stock_total, stock_available, room_size, bathroom_type, electricity_type, is_active)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [kosId, data.name, data.description || null, data.priceMonthly, data.stockTotal, data.stockAvailable, data.roomSize || null, data.bathroomType, data.electricityType, data.isActive ? 1 : 0]
       );
 
       const roomTypeId = (result as { insertId: number }).insertId;

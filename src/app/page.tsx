@@ -150,8 +150,14 @@ function HomePageContent() {
       </header>
 
       {/* Hero / Search Section */}
-      <section className="bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      <section className="relative text-white overflow-hidden">
+        {/* Background Image with Opacity Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img src="/images.jpg" alt="Kos Background" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-emerald-900/70 backdrop-blur-[2px]"></div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-20 sm:pt-16 sm:pb-28">
           <div className="text-center mb-6">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
               Temukan Kos Terbaik

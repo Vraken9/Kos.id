@@ -86,22 +86,23 @@ export default function AdminKosListPage() {
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold text-gray-900 truncate">{kos.name as string}</h3>
+                  <div className="flex items-center gap-2 mb-2">
                     <button 
                       onClick={() => handleToggle(kos.id as number, 'is_active', !!kos.is_active)}
-                      className={`text-xs px-2 py-0.5 rounded-full font-medium transition-colors ${kos.is_active ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                      className={`text-xs px-2.5 py-1 rounded-md font-medium transition-colors border ${kos.is_active ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'}`}
                     >
-                      {kos.is_active ? 'Aktif' : 'Nonaktif'}
+                      <span className={`inline-block w-2 h-2 rounded-full mr-1.5 ${kos.is_active ? 'bg-emerald-500' : 'bg-gray-400'}`}></span>
+                      {kos.is_active ? 'Status: Aktif' : 'Status: Nonaktif'}
                     </button>
                     <button 
                       onClick={() => handleToggle(kos.id as number, 'is_featured', !!kos.is_featured)}
-                      className={`text-xs px-2 py-0.5 rounded-full font-medium transition-colors ${kos.is_featured ? 'bg-amber-100 text-amber-700 hover:bg-amber-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                      className={`text-xs px-2.5 py-1 rounded-md font-medium transition-colors border ${kos.is_featured ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'}`}
                     >
                       {kos.is_featured ? '⭐ Featured' : 'Biasa'}
                     </button>
                     <Badge variant={(kos.gender_type as string) as 'putra' | 'putri' | 'campur'}>{kos.gender_type as string}</Badge>
                   </div>
+                  <h3 className="font-semibold text-lg text-gray-900 truncate">{kos.name as string}</h3>
                   <p className="text-sm text-gray-500 truncate">{kos.address as string}</p>
                   <div className="flex gap-4 text-xs text-gray-500 mt-1">
                     <span>Harga: {kos.minimum_price ? formatRupiah(kos.minimum_price as number) : '-'}</span>

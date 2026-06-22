@@ -31,6 +31,8 @@ export default function EditKosPage() {
   const [facilitiesList, setFacilitiesList] = useState<{id: number, name: string}[]>([]);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [newPhotoUrl, setNewPhotoUrl] = useState('');
+  const [newFacilityName, setNewFacilityName] = useState('');
+  const [addingFacility, setAddingFacility] = useState(false);
 
   useEffect(() => {
     fetch('/api/admin/facilities')
@@ -59,6 +61,32 @@ export default function EditKosPage() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [id]);
+
+  const handleAddFacility = async () => {
+    if (!newFacilityName.trim()) return;
+    setAddingFacility(true);
+    try {
+      const res = await fetch('/api/admin/facilities', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newFacilityName.trim(), slug: slugify(newFacilityName), scope: 'both' })
+      });
+      const json = await res.json();
+      if (json.success) {
+        const newFac = { id: json.data.id, name: newFacilityName.trim() };
+        setFacilitiesList(prev => [...prev, newFac]);
+        setForm(prev => ({ ...prev, facilityIds: [...prev.facilityIds, newFac.id] }));
+        setNewFacilityName('');
+        toast.success('Fasilitas berhasil ditambahkan');
+      } else {
+        toast.error(json.error?.message || 'Gagal menambah fasilitas');
+      }
+    } catch (e) {
+      toast.error('Terjadi kesalahan');
+    } finally {
+      setAddingFacility(false);
+    }
+  };
 
   const handleNameChange = (name: string) => {
     setForm(f => ({ ...f, name, slug: slugify(name) }));
@@ -262,6 +290,22 @@ export default function EditKosPage() {
                 </label>
               ))}
               {facilitiesList.length === 0 && <span className="text-sm text-gray-500 italic">Memuat fasilitas...</span>}
+            </div>
+            
+            {/* Inline Facility Add */}
+            <div className="mt-6 border-t pt-4">
+              <label className="text-sm font-medium text-gray-700 block mb-2">Fasilitas tidak ada di list? Tambah baru:</label>
+              <div className="flex gap-2 max-w-sm">
+                <Input 
+                  placeholder="Nama fasilitas baru..." 
+                  value={newFacilityName} 
+                  onChange={e => setNewFacilityName(e.target.value)} 
+                  onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddFacility(); } }}
+                />
+                <Button type="button" onClick={handleAddFacility} disabled={addingFacility} variant="secondary">
+                  {addingFacility ? 'Menambah...' : 'Tambah'}
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
