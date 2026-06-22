@@ -91,9 +91,9 @@ export async function POST(request: NextRequest) {
         `INSERT INTO bookings (
           booking_code, access_token, kos_id, room_type_id,
           customer_name, customer_whatsapp, planned_checkin_date, customer_note,
-          status, payment_amount,
+          status, duration_months, payment_amount,
           snapshot_kos_name, snapshot_kos_address, snapshot_room_type_name, snapshot_owner_whatsapp
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'waiting_payment', ?, ?, ?, ?, ?)`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'waiting_payment', ?, ?, ?, ?, ?, ?)`,
         [
           bookingCode,
           accessToken,
@@ -103,7 +103,8 @@ export async function POST(request: NextRequest) {
           normalizedWa,
           data.plannedCheckinDate,
           data.customerNote || null,
-          roomType.price_monthly,
+          data.durationMonths,
+          roomType.price_monthly * data.durationMonths,
           kos.name,
           kos.address,
           roomType.name,
@@ -133,7 +134,7 @@ export async function POST(request: NextRequest) {
         bookingCode,
         accessToken,
         status: 'waiting_payment',
-        paymentAmount: roomType.price_monthly,
+        paymentAmount: roomType.price_monthly * data.durationMonths,
         statusUrl: `/booking/${bookingCode}?token=${accessToken}`,
       },
     });

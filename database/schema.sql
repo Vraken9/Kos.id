@@ -178,6 +178,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     'cancelled',
     'expired'
   ) NOT NULL DEFAULT 'waiting_payment',
+  duration_months INT UNSIGNED NOT NULL DEFAULT 1,
   payment_amount INT UNSIGNED NOT NULL,
   snapshot_kos_name VARCHAR(150) NOT NULL,
   snapshot_kos_address TEXT NOT NULL,

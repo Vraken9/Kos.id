@@ -120,6 +120,17 @@ export async function POST(request: NextRequest) {
         }
       }
 
+      // Add photos
+      if (data.photos && data.photos.length > 0) {
+        for (let i = 0; i < data.photos.length; i++) {
+          const p = data.photos[i];
+          await conn.execute(
+            'INSERT INTO kos_photos (kos_id, image_path, is_cover, sort_order) VALUES (?, ?, ?, ?)',
+            [kosId, p.url, p.isCover ? 1 : 0, i + 1]
+          );
+        }
+      }
+
       conn.release();
       return NextResponse.json({ success: true, data: { id: kosId } }, { status: 201 });
     } catch (err) {

@@ -36,7 +36,7 @@ export default function AdminBookingsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || '');
-  const [actionDialog, setActionDialog] = useState<{ type: 'confirm' | 'reject' | 'cancel'; booking: Record<string, unknown> } | null>(null);
+  const [actionDialog, setActionDialog] = useState<{ type: 'confirm' | 'reject' | 'cancel' | 'checkout'; booking: Record<string, unknown> } | null>(null);
   const [adminNote, setAdminNote] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
 
@@ -62,11 +62,16 @@ export default function AdminBookingsPage() {
 
     setActionLoading(true);
     try {
-      const res = await fetch(`/api/admin/bookings/${booking.id}/${type}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ adminNote: adminNote.trim() }),
-      });
+      let res;
+      if (type === 'checkout') {
+        res = await fetch(`/api/admin/bookings/${booking.id}/checkout`, { method: 'POST' });
+      } else {
+        res = await fetch(`/api/admin/bookings/${booking.id}/${type}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ adminNote: adminNote.trim() }),
+        });
+      }
       const json = await res.json();
       if (json.success) { toast.success(`Booking berhasil di-${type}!`); fetchBookings(); setActionDialog(null); setAdminNote(''); }
       else { toast.error(json.error?.message || 'Gagal memproses'); }
@@ -109,8 +114,11 @@ export default function AdminBookingsPage() {
                       <div className="text-sm text-gray-600">
                         <span>{b.customer_name as string}</span> · <span>{b.snapshot_kos_name as string}</span> · <span>{b.snapshot_room_type_name as string}</span>
                       </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        Durasi: <strong>{b.duration_months as number} bulan</strong> · Masuk: <strong>{formatDate(b.planned_checkin_date as string)}</strong>
+                      </div>
                       <div className="text-xs text-gray-400 mt-1">
-                        {formatRupiah(b.payment_amount as number)} · {formatDate(b.created_at as string)}
+                        {formatRupiah(b.payment_amount as number)} · Dibuat: {formatDate(b.created_at as string)}
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-2 shrink-0 justify-end">
@@ -130,6 +138,11 @@ export default function AdminBookingsPage() {
                             <XCircle className="h-3.5 w-3.5 mr-1" />Reject
                           </Button>
                         </>
+                      )}
+                      {b.status === 'confirmed' && (
+                        <Button size="sm" onClick={() => { setActionDialog({ type: 'checkout', booking: b }); setAdminNote(''); }} className="bg-blue-600 hover:bg-blue-700 text-white">
+                          Selesaikan Sewa
+                        </Button>
                       )}
                       {['waiting_payment', 'waiting_confirmation', 'confirmed', 'rejected'].includes(b.status as string) && (
                         <Button size="sm" variant="outline" onClick={() => { setActionDialog({ type: 'cancel', booking: b }); setAdminNote(''); }}>Cancel</Button>
@@ -151,6 +164,7 @@ export default function AdminBookingsPage() {
               {actionDialog?.type === 'confirm' && 'Konfirmasi Pembayaran'}
               {actionDialog?.type === 'reject' && 'Tolak Bukti Pembayaran'}
               {actionDialog?.type === 'cancel' && 'Batalkan Booking'}
+              {actionDialog?.type === 'checkout' && 'Selesaikan Sewa (Check-out)'}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
@@ -163,19 +177,24 @@ export default function AdminBookingsPage() {
             {actionDialog?.type === 'cancel' && actionDialog?.booking?.status === 'confirmed' && (
               <p className="text-sm text-amber-600">Stok kamar akan dikembalikan 1 karena booking sudah dikonfirmasi sebelumnya.</p>
             )}
-            <div>
-              <Label>Catatan Admin {actionDialog?.type !== 'confirm' ? '*' : '(opsional)'}</Label>
-              <Textarea value={adminNote} onChange={e => setAdminNote(e.target.value)} className="mt-1" placeholder="Catatan untuk user dan log..." />
-            </div>
+            {actionDialog?.type === 'checkout' && (
+              <p className="text-sm text-amber-600">Stok kamar akan dikembalikan 1 dan status booking menjadi Expired.</p>
+            )}
+            {actionDialog?.type !== 'checkout' && (
+              <div>
+                <Label>Catatan Admin {actionDialog?.type !== 'confirm' ? '*' : '(opsional)'}</Label>
+                <Textarea value={adminNote} onChange={e => setAdminNote(e.target.value)} className="mt-1" placeholder="Catatan untuk user dan log..." />
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setActionDialog(null)}>Batal</Button>
             <Button
-              variant={actionDialog?.type === 'confirm' ? 'default' : 'destructive'}
+              variant={actionDialog?.type === 'confirm' || actionDialog?.type === 'checkout' ? 'default' : 'destructive'}
               onClick={handleAction}
               disabled={actionLoading}
             >
-              {actionLoading ? 'Memproses...' : actionDialog?.type === 'confirm' ? 'Konfirmasi' : actionDialog?.type === 'reject' ? 'Tolak' : 'Batalkan'}
+              {actionLoading ? 'Memproses...' : actionDialog?.type === 'confirm' ? 'Konfirmasi' : actionDialog?.type === 'reject' ? 'Tolak' : actionDialog?.type === 'checkout' ? 'Selesaikan Sewa' : 'Batalkan'}
             </Button>
           </DialogFooter>
         </DialogContent>

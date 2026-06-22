@@ -16,6 +16,7 @@ export const bookingCreateSchema = z.object({
     today.setHours(0, 0, 0, 0);
     return date >= today;
   }, 'Tanggal mulai sewa tidak valid atau sudah lewat'),
+  durationMonths: z.number().int().min(1, 'Durasi minimal 1 bulan').max(60, 'Durasi maksimal 60 bulan').default(1),
   customerNote: z.string().trim().max(500).optional().default(''),
 });
 
@@ -46,7 +47,8 @@ export const kosCreateSchema = z.object({
   rules: z.string().trim().max(5000).optional().default(''),
   isActive: z.boolean().default(true),
   isFeatured: z.boolean().default(false),
-  facilityIds: z.array(z.number().int().positive()).optional().default([]),
+  facilityIds: z.array(z.coerce.number().int().positive()).optional().default([]),
+  photos: z.array(z.object({ url: z.string().url(), isCover: z.boolean().default(false) })).optional().default([]),
 });
 
 export const kosUpdateSchema = kosCreateSchema.partial();
@@ -81,7 +83,7 @@ export const roomTypeUpdateSchema = z.object({
   bathroomType: z.enum(['inside', 'outside', 'shared']).optional(),
   electricityType: z.enum(['included', 'token', 'separate']).optional(),
   isActive: z.boolean().optional(),
-  facilityIds: z.array(z.number().int().positive()).optional(),
+  facilityIds: z.array(z.coerce.number().int().positive()).optional(),
 });
 
 // ============================================

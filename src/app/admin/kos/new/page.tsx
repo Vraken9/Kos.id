@@ -23,8 +23,11 @@ export default function NewKosPage() {
     latitude: '', longitude: '', googleMapsUrl: '',
     genderType: 'campur', ownerName: '', ownerWhatsapp: '',
     rules: '', isActive: true, isFeatured: false, facilityIds: [] as number[],
+    photos: [] as { url: string; isCover: boolean }[],
   });
   const [facilitiesList, setFacilitiesList] = useState<{id: number, name: string}[]>([]);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [newPhotoUrl, setNewPhotoUrl] = useState('');
 
   useEffect(() => {
     fetch('/api/admin/facilities')
@@ -37,6 +40,63 @@ export default function NewKosPage() {
 
   const handleNameChange = (name: string) => {
     setForm(f => ({ ...f, name, slug: slugify(name) }));
+  };
+
+  const handleUploadPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Ukuran file maksimal 10MB');
+      return;
+    }
+    
+    setUploadingPhoto(true);
+    const fd = new FormData();
+    fd.append('image', file);
+    try {
+      const res = await fetch('/api/admin/uploads/kos-photo', { method: 'POST', body: fd });
+      const json = await res.json();
+      if (json.success) {
+        setForm(f => ({
+          ...f,
+          photos: [...f.photos, { url: json.data.imagePath, isCover: f.photos.length === 0 }]
+        }));
+        toast.success('Foto berhasil diunggah');
+      } else {
+        toast.error(json.error?.message || 'Gagal unggah foto');
+      }
+    } catch {
+      toast.error('Gagal terhubung ke server');
+    } finally {
+      setUploadingPhoto(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleAddPhotoUrl = () => {
+    if (!newPhotoUrl) return;
+    setForm(f => ({
+      ...f,
+      photos: [...f.photos, { url: newPhotoUrl, isCover: f.photos.length === 0 }]
+    }));
+    setNewPhotoUrl('');
+  };
+
+  const setCoverPhoto = (index: number) => {
+    setForm(f => ({
+      ...f,
+      photos: f.photos.map((p, i) => ({ ...p, isCover: i === index }))
+    }));
+  };
+
+  const removePhoto = (index: number) => {
+    setForm(f => {
+      const newPhotos = f.photos.filter((_, i) => i !== index);
+      if (newPhotos.length > 0 && !newPhotos.some(p => p.isCover)) {
+        newPhotos[0].isCover = true;
+      }
+      return { ...f, photos: newPhotos };
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -109,8 +169,49 @@ export default function NewKosPage() {
           <CardHeader><CardTitle className="text-base">Peraturan & Status</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             <div><Label>Peraturan Kos</Label><Textarea value={form.rules} onChange={e => setForm(f => ({ ...f, rules: e.target.value }))} className="mt-1" placeholder="Satu peraturan per baris" /></div>
-            <label className="flex items-center gap-2"><input type="checkbox" checked={form.isActive} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked }))} className="rounded" /><span className="text-sm">Aktif</span></label>
-            <label className="flex items-center gap-2"><input type="checkbox" checked={form.isFeatured} onChange={e => setForm(f => ({ ...f, isFeatured: e.target.checked }))} className="rounded" /><span className="text-sm">Featured</span></label>
+            <div>
+              <label className="flex items-center gap-2 mb-1">
+                <input type="checkbox" checked={form.isActive} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked }))} className="rounded" />
+                <span className="text-sm font-medium">Aktif</span>
+              </label>
+              <p className="text-xs text-gray-500 ml-6">Jika aktif, kos ini akan terlihat oleh pengunjung di halaman publik.</p>
+            </div>
+            <div>
+              <label className="flex items-center gap-2 mb-1">
+                <input type="checkbox" checked={form.isFeatured} onChange={e => setForm(f => ({ ...f, isFeatured: e.target.checked }))} className="rounded" />
+                <span className="text-sm font-medium">Featured</span>
+              </label>
+              <p className="text-xs text-gray-500 ml-6">Menambahkan badge khusus (Bintang) dan memprioritaskan kos ini dalam tampilan.</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle className="text-base">Galeri Foto</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex gap-2">
+              <Input placeholder="Atau masukkan URL gambar..." value={newPhotoUrl} onChange={e => setNewPhotoUrl(e.target.value)} />
+              <Button type="button" onClick={handleAddPhotoUrl} variant="secondary">Tambah URL</Button>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-500">Atau upload file (Max 10MB):</span>
+              <Input type="file" accept="image/*" onChange={handleUploadPhoto} disabled={uploadingPhoto} className="max-w-xs" />
+              {uploadingPhoto && <span className="text-sm text-emerald-600">Mengunggah...</span>}
+            </div>
+            {form.photos.length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+                {form.photos.map((p, i) => (
+                  <div key={i} className={`relative rounded-lg border-2 overflow-hidden ${p.isCover ? 'border-emerald-500' : 'border-gray-200'}`}>
+                    <img src={p.url} alt="preview" className="w-full h-24 object-cover" />
+                    <div className="absolute top-1 right-1 flex gap-1">
+                      {!p.isCover && <button type="button" onClick={() => setCoverPhoto(i)} className="bg-white/80 p-1 rounded text-xs hover:bg-emerald-100" title="Jadikan Cover">⭐</button>}
+                      <button type="button" onClick={() => removePhoto(i)} className="bg-red-500/80 text-white p-1 rounded text-xs hover:bg-red-600" title="Hapus">✕</button>
+                    </div>
+                    {p.isCover && <div className="absolute bottom-0 w-full bg-emerald-500 text-white text-[10px] text-center py-0.5">COVER</div>}
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 

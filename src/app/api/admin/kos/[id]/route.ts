@@ -114,6 +114,20 @@ export async function PUT(
         }
       }
 
+      // Update photos if provided
+      if (data.photos !== undefined) {
+        await conn.execute('DELETE FROM kos_photos WHERE kos_id = ?', [id]);
+        if (data.photos.length > 0) {
+          for (let i = 0; i < data.photos.length; i++) {
+            const p = data.photos[i];
+            await conn.execute(
+              'INSERT INTO kos_photos (kos_id, image_path, is_cover, sort_order) VALUES (?, ?, ?, ?)',
+              [id, p.url, p.isCover ? 1 : 0, i + 1]
+            );
+          }
+        }
+      }
+
       conn.release();
     } catch (err) {
       conn.release();

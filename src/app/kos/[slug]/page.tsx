@@ -31,7 +31,7 @@ export default function KosDetailPage() {
   const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
-    customerName: '', customerWhatsapp: '', plannedCheckinDate: '', customerNote: '',
+    customerName: '', customerWhatsapp: '', plannedCheckinDate: '', customerNote: '', durationMonths: 1,
   });
 
   useEffect(() => {
@@ -163,29 +163,7 @@ export default function KosDetailPage() {
                   <span className="text-emerald-600 font-medium">{kos.distanceKm as number} km dari kampus</span>
                 )}
               </div>
-              <div className="mt-4 rounded-xl overflow-hidden border border-gray-200">
-                {(kos.latitude && kos.longitude) ? (
-                  <iframe 
-                    width="100%" 
-                    height="250" 
-                    frameBorder={0}
-                    scrolling="no" 
-                    marginHeight={0} 
-                    marginWidth={0} 
-                    src={`https://maps.google.com/maps?q=${kos.latitude},${kos.longitude}&hl=id&z=15&output=embed`}
-                  ></iframe>
-                ) : (
-                  <div className="bg-gray-100 h-[250px] flex items-center justify-center text-gray-500">Peta tidak tersedia</div>
-                )}
-                {(kos.google_maps_url as string) && (
-                  <div className="bg-gray-50 p-3 border-t border-gray-200 text-center">
-                    <a href={kos.google_maps_url as string} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-emerald-600 hover:text-emerald-700">
-                      Buka di Aplikasi Google Maps →
-                    </a>
-                  </div>
-                )}
               </div>
-            </div>
 
             {/* Description */}
             {(kos.description as string) && (
@@ -300,6 +278,32 @@ export default function KosDetailPage() {
                 </div>
               )}
             </div>
+
+            <div className="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="p-4 border-b border-gray-100">
+                <h3 className="font-semibold text-gray-900">Lokasi Kos</h3>
+              </div>
+              {(kos.latitude && kos.longitude) ? (
+                <iframe 
+                  width="100%" 
+                  height="250" 
+                  frameBorder={0}
+                  scrolling="no" 
+                  marginHeight={0} 
+                  marginWidth={0} 
+                  src={`https://maps.google.com/maps?q=${kos.latitude},${kos.longitude}&hl=id&z=15&output=embed`}
+                ></iframe>
+              ) : (
+                <div className="bg-gray-100 h-[250px] flex items-center justify-center text-gray-500">Peta tidak tersedia</div>
+              )}
+              {(kos.google_maps_url as string) && (
+                <div className="bg-gray-50 p-3 text-center border-t border-gray-100">
+                  <a href={kos.google_maps_url as string} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-emerald-600 hover:text-emerald-700">
+                    Buka di Aplikasi Google Maps →
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -320,6 +324,10 @@ export default function KosDetailPage() {
             <div>
               <Label>Nama Lengkap *</Label>
               <Input placeholder="Nama lengkap Anda" value={form.customerName} onChange={e => setForm(f => ({ ...f, customerName: e.target.value }))} className="mt-1" />
+            </div>
+            <div>
+              <Label>Durasi Sewa (Bulan) *</Label>
+              <Input type="number" min="1" max="60" value={form.durationMonths} onChange={e => setForm({ ...form, durationMonths: parseInt(e.target.value) || 1 })} className="mt-1" />
             </div>
             <div>
               <Label>Nomor WhatsApp *</Label>
