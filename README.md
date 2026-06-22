@@ -229,6 +229,4 @@ Aplikasi saat ini berfokus pada **Minimum Viable Product (MVP)**. Potensi pening
 - **Akun Pengguna Khusus**: Halaman dashboard khusus pengguna (*tenant*) kos untuk fitur penagihan per bulan.
 - **Sistem Rating & Ulasan**: Agar pengguna bisa merekomendasikan kos yang sudah pernah disewa.
 
-<div align="center">
-  <i>Dibuat dengan ❤️ untuk menyelesaikan permasalahan pencarian kos konvensional</i>
-</div>
+
