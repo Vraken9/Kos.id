@@ -38,7 +38,7 @@ Kos.id dikembangkan (sebagai bagian dari mata kuliah **Interaksi Manusia dan Kom
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+##  Teknologi yang Digunakan
 
 | Kategori | Teknologi | Deskripsi |
 | :--- | :--- | :--- |
