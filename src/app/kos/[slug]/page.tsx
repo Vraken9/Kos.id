@@ -7,11 +7,12 @@ import { MapPin, Phone, ArrowLeft, Home, Users, Ruler, Bath, Zap, Star } from 'l
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import Footer from '@/components/Footer';
 
 function formatRupiah(amount: number): string {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
@@ -257,7 +258,8 @@ export default function KosDetailPage() {
 
           {/* Sidebar */}
           <div className="lg:w-80 shrink-0">
-            <div className="sticky top-20 bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <div className="sticky top-20 space-y-6">
+              <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
               <h3 className="font-semibold text-gray-900 mb-3">Info Pemilik</h3>
               {(kos.owner_name as string) && <p className="text-sm text-gray-600 mb-1">{kos.owner_name as string}</p>}
               <a
@@ -279,7 +281,7 @@ export default function KosDetailPage() {
               )}
             </div>
 
-            <div className="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
               <div className="p-4 border-b border-gray-100">
                 <h3 className="font-semibold text-gray-900">Lokasi Kos</h3>
               </div>
@@ -304,6 +306,7 @@ export default function KosDetailPage() {
                 </div>
               )}
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -347,6 +350,7 @@ export default function KosDetailPage() {
           </div>
         </DialogContent>
       </Dialog>
+      <Footer />
     </div>
   );
 }

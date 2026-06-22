@@ -239,7 +239,12 @@ export default function EditKosPage() {
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="text-base">Fasilitas Kos</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              Fasilitas Kos
+            </CardTitle>
+            <p className="text-sm text-gray-500">Daftar fasilitas di bawah ini diambil otomatis dari <strong>Master Data Fasilitas</strong>. Anda dapat menambah opsi fasilitas baru melalui menu <Link href="/admin/facilities" className="text-emerald-600 hover:underline">Kelola Fasilitas</Link>.</p>
+          </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {facilitiesList.map(f => (

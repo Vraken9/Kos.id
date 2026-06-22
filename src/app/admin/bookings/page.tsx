@@ -37,6 +37,7 @@ export default function AdminBookingsPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || '');
   const [actionDialog, setActionDialog] = useState<{ type: 'confirm' | 'reject' | 'cancel' | 'checkout'; booking: Record<string, unknown> } | null>(null);
+  const [detailBooking, setDetailBooking] = useState<Record<string, unknown> | null>(null);
   const [adminNote, setAdminNote] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
 
@@ -122,6 +123,9 @@ export default function AdminBookingsPage() {
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-2 shrink-0 justify-end">
+                      <Button size="sm" variant="outline" onClick={() => setDetailBooking(b)}>
+                        <Eye className="h-3.5 w-3.5 mr-1" />Detail
+                      </Button>
                       {Boolean(b.payment_proof_url) && (
                         <a href={b.payment_proof_url as string} target="_blank" rel="noopener noreferrer">
                           <Button size="sm" variant="secondary">
@@ -196,6 +200,50 @@ export default function AdminBookingsPage() {
             >
               {actionLoading ? 'Memproses...' : actionDialog?.type === 'confirm' ? 'Konfirmasi' : actionDialog?.type === 'reject' ? 'Tolak' : actionDialog?.type === 'checkout' ? 'Selesaikan Sewa' : 'Batalkan'}
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Detail Dialog */}
+      <Dialog open={!!detailBooking} onOpenChange={() => setDetailBooking(null)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Detail Pesanan</DialogTitle>
+          </DialogHeader>
+          {detailBooking && (
+            <div className="space-y-4 text-sm">
+              <div className="grid grid-cols-2 gap-4">
+                <div><span className="text-gray-500 block">Kode Booking</span><span className="font-medium font-mono">{detailBooking.booking_code as string}</span></div>
+                <div><span className="text-gray-500 block">Status</span><Badge variant={(statusBadge[detailBooking.status as string] || statusBadge.waiting_payment).variant as any}>{(statusBadge[detailBooking.status as string] || statusBadge.waiting_payment).label}</Badge></div>
+              </div>
+              <div className="border-t pt-4 grid grid-cols-2 gap-4">
+                <div><span className="text-gray-500 block">Nama Pemesan</span><span className="font-medium">{detailBooking.customer_name as string}</span></div>
+                <div><span className="text-gray-500 block">No WhatsApp</span><span className="font-medium">{detailBooking.customer_whatsapp as string}</span></div>
+              </div>
+              <div className="border-t pt-4 grid grid-cols-2 gap-4">
+                <div><span className="text-gray-500 block">Nama Kos</span><span className="font-medium">{detailBooking.snapshot_kos_name as string}</span></div>
+                <div><span className="text-gray-500 block">Tipe Kamar</span><span className="font-medium">{detailBooking.snapshot_room_type_name as string}</span></div>
+                <div><span className="text-gray-500 block">Durasi Sewa</span><span className="font-medium">{detailBooking.duration_months as number} Bulan</span></div>
+                <div><span className="text-gray-500 block">Tgl Mulai Sewa</span><span className="font-medium">{formatDate(detailBooking.planned_checkin_date as string)}</span></div>
+              </div>
+              <div className="border-t pt-4">
+                <span className="text-gray-500 block">Catatan Pemesan</span>
+                <p className="font-medium mt-1">{(detailBooking.customer_note as string) || '-'}</p>
+              </div>
+              <div className="border-t pt-4">
+                <span className="text-gray-500 block">Total Pembayaran</span>
+                <p className="font-bold text-lg text-emerald-700">{formatRupiah(detailBooking.payment_amount as number)}</p>
+              </div>
+              {(detailBooking.admin_note as string) && (
+                <div className="bg-gray-50 border rounded-lg p-3">
+                  <span className="text-gray-500 block text-xs">Catatan Admin</span>
+                  <p className="font-medium mt-1">{detailBooking.admin_note as string}</p>
+                </div>
+              )}
+            </div>
+          )}
+          <DialogFooter>
+            <Button onClick={() => setDetailBooking(null)}>Tutup</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

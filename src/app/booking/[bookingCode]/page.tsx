@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
+import Footer from '@/components/Footer';
 
 function formatRupiah(amount: number): string {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
@@ -198,6 +199,14 @@ function BookingStatusContent() {
             <CardHeader><CardTitle className="text-base">Bukti Pembayaran</CardTitle></CardHeader>
             <CardContent>
               <img src={(booking.paymentProof as Record<string, unknown>).imageUrl as string} alt="Bukti Pembayaran" className="max-w-sm rounded-lg border mx-auto" />
+              {status === 'waiting_confirmation' && (
+                <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
+                  <p className="text-sm text-blue-800 mb-3">Bukti pembayaran sedang dicek oleh Admin. Jika ada kendala atau proses memakan waktu terlalu lama, silakan hubungi admin.</p>
+                  <a href="https://wa.me/089530123608" target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" className="bg-white hover:bg-gray-50 border-blue-200 text-blue-700">Hubungi Admin (WhatsApp)</Button>
+                  </a>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
@@ -220,6 +229,7 @@ function BookingStatusContent() {
           </Card>
         )}
       </div>
+      <Footer />
     </div>
   );
 }
