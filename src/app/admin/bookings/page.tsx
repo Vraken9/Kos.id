@@ -113,7 +113,14 @@ export default function AdminBookingsPage() {
                         {formatRupiah(b.payment_amount as number)} · {formatDate(b.created_at as string)}
                       </div>
                     </div>
-                    <div className="flex gap-2 shrink-0">
+                    <div className="flex flex-wrap gap-2 shrink-0 justify-end">
+                      {Boolean(b.payment_proof_url) && (
+                        <a href={b.payment_proof_url as string} target="_blank" rel="noopener noreferrer">
+                          <Button size="sm" variant="secondary">
+                            <Eye className="h-3.5 w-3.5 mr-1" />Lihat Bukti
+                          </Button>
+                        </a>
+                      )}
                       {b.status === 'waiting_confirmation' && (
                         <>
                           <Button size="sm" onClick={() => { setActionDialog({ type: 'confirm', booking: b }); setAdminNote(''); }}>

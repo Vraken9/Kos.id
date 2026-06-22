@@ -111,6 +111,10 @@ function BookingStatusContent() {
             </Button>
           </div>
           <p className="text-sm text-gray-500 font-mono mb-3">{booking.bookingCode as string}</p>
+          <div className="bg-amber-50 border border-amber-200 text-amber-800 text-xs p-3 rounded-lg mb-4 flex gap-2 items-start">
+            <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+            <p><strong>Penting:</strong> Harap simpan Kode Booking di atas atau salin link halaman ini agar Anda dapat mengecek status pesanan sewaktu-waktu di halaman Cek Pesanan.</p>
+          </div>
           <Badge variant={sc.color as 'default' | 'destructive' | 'warning' | 'info' | 'secondary'} className="gap-1">
             {sc.icon}{sc.label}
           </Badge>

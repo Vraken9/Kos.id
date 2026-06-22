@@ -163,11 +163,28 @@ export default function KosDetailPage() {
                   <span className="text-emerald-600 font-medium">{kos.distanceKm as number} km dari kampus</span>
                 )}
               </div>
-              {(kos.google_maps_url as string) && (
-                <a href={kos.google_maps_url as string} target="_blank" rel="noopener noreferrer" className="text-sm text-emerald-600 hover:underline mt-1 inline-block">
-                  Buka di Google Maps →
-                </a>
-              )}
+              <div className="mt-4 rounded-xl overflow-hidden border border-gray-200">
+                {(kos.latitude && kos.longitude) ? (
+                  <iframe 
+                    width="100%" 
+                    height="250" 
+                    frameBorder={0}
+                    scrolling="no" 
+                    marginHeight={0} 
+                    marginWidth={0} 
+                    src={`https://maps.google.com/maps?q=${kos.latitude},${kos.longitude}&hl=id&z=15&output=embed`}
+                  ></iframe>
+                ) : (
+                  <div className="bg-gray-100 h-[250px] flex items-center justify-center text-gray-500">Peta tidak tersedia</div>
+                )}
+                {(kos.google_maps_url as string) && (
+                  <div className="bg-gray-50 p-3 border-t border-gray-200 text-center">
+                    <a href={kos.google_maps_url as string} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-emerald-600 hover:text-emerald-700">
+                      Buka di Aplikasi Google Maps →
+                    </a>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Description */}

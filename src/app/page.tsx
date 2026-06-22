@@ -136,7 +136,10 @@ function HomePageContent() {
               <Home className="h-6 w-6 text-emerald-600" />
               <span className="text-xl font-bold text-emerald-600">kos.id</span>
             </Link>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <Link href="/cek-pesanan">
+                <Button variant="outline" size="sm" className="hidden sm:inline-flex">Cek Pesanan</Button>
+              </Link>
               <Link href="/admin/login">
                 <Button variant="ghost" size="sm">Admin</Button>
               </Link>

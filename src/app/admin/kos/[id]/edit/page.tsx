@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -15,9 +15,12 @@ function slugify(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
-export default function NewKosPage() {
+export default function EditKosPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
   const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
     name: '', slug: '', description: '', address: '',
     latitude: '', longitude: '', googleMapsUrl: '',
@@ -33,7 +36,25 @@ export default function NewKosPage() {
         if (json.success) setFacilitiesList(json.data.filter((f: any) => f.scope === 'kos' || f.scope === 'both'));
       })
       .catch(console.error);
-  }, []);
+
+    fetch(`/api/admin/kos/${id}`)
+      .then(res => res.json())
+      .then(json => {
+        if (json.success) {
+          const d = json.data;
+          setForm({
+            name: d.name, slug: d.slug, description: d.description || '', address: d.address,
+            latitude: d.latitude ? String(d.latitude) : '', longitude: d.longitude ? String(d.longitude) : '',
+            googleMapsUrl: d.google_maps_url || '', genderType: d.gender_type,
+            ownerName: d.owner_name || '', ownerWhatsapp: d.owner_whatsapp || '',
+            rules: d.rules || '', isActive: Boolean(d.is_active), isFeatured: Boolean(d.is_featured),
+            facilityIds: d.facilities ? d.facilities.map((f: any) => f.id) : []
+          });
+        }
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [id]);
 
   const handleNameChange = (name: string) => {
     setForm(f => ({ ...f, name, slug: slugify(name) }));
@@ -43,8 +64,8 @@ export default function NewKosPage() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const res = await fetch('/api/admin/kos', {
-        method: 'POST',
+      const res = await fetch(`/api/admin/kos/${id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
@@ -54,9 +75,9 @@ export default function NewKosPage() {
       });
       const json = await res.json();
       if (json.success) {
-        toast.success('Kos berhasil ditambahkan!');
+        toast.success('Kos berhasil diupdate!');
         router.push('/admin/kos');
-      } else { toast.error(json.error?.message || 'Gagal menambahkan kos'); }
+      } else { toast.error(json.error?.message || 'Gagal mengupdate kos'); }
     } catch { toast.error('Terjadi kesalahan'); } finally { setSubmitting(false); }
   };
 
@@ -64,9 +85,10 @@ export default function NewKosPage() {
     <div>
       <div className="flex items-center gap-3 mb-6">
         <Link href="/admin/kos" className="text-gray-600 hover:text-gray-900"><ArrowLeft className="h-5 w-5" /></Link>
-        <h1 className="text-2xl font-bold text-gray-900">Tambah Kos Baru</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Edit Kos</h1>
       </div>
 
+      {loading ? <div className="animate-pulse flex gap-4"><div className="h-40 bg-gray-200 rounded w-full"></div></div> : (
       <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
         <Card>
           <CardHeader><CardTitle className="text-base">Informasi Dasar</CardTitle></CardHeader>
@@ -138,10 +160,11 @@ export default function NewKosPage() {
         </Card>
 
         <div className="flex gap-3">
-          <Button type="submit" disabled={submitting}>{submitting ? 'Menyimpan...' : 'Simpan Kos'}</Button>
+          <Button type="submit" disabled={submitting}>{submitting ? 'Menyimpan...' : 'Simpan Perubahan'}</Button>
           <Link href="/admin/kos"><Button variant="outline" type="button">Batal</Button></Link>
         </div>
       </form>
+      )}
     </div>
   );
 }

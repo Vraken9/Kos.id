@@ -5,11 +5,11 @@ import { roomTypeCreateSchema } from '@/lib/validation';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ kosId: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireAdmin();
-    const { kosId } = await params;
+    const { id: kosId } = await params;
 
     const roomTypes = await query<Record<string, unknown>[]>(
       `SELECT rt.*, 
@@ -26,11 +26,11 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ kosId: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireAdmin();
-    const { kosId } = await params;
+    const { id: kosId } = await params;
     const body = await request.json();
     const parsed = roomTypeCreateSchema.safeParse(body);
 

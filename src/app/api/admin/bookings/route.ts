@@ -38,7 +38,11 @@ export async function GET(request: NextRequest) {
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 
     const rows = await query<Record<string, unknown>[]>(
-      `SELECT b.* FROM bookings b ${whereClause} ORDER BY b.created_at DESC LIMIT ? OFFSET ?`,
+      `SELECT b.*, pp.image_path as payment_proof_url 
+       FROM bookings b 
+       LEFT JOIN payment_proofs pp ON pp.booking_id = b.id AND pp.is_active = 1
+       ${whereClause} 
+       ORDER BY b.created_at DESC LIMIT ? OFFSET ?`,
       [...params, limit, offset]
     );
 
