@@ -16,21 +16,21 @@
 
 ---
 
-## 🎯 Tujuan Proyek
+##  Tujuan Proyek
 Kos.id dikembangkan (sebagai bagian dari mata kuliah **Interaksi Manusia dan Komputer**) untuk menyelesaikan masalah konvensional pencarian tempat tinggal mahasiswa. Aplikasi ini menargetkan pencarian kos secara spesifik di sekitar kawasan universitas (khususnya *Universitas Ma'arif Nahdlatul Ulama, Kebumen*) dengan memberikan visibilitas penuh terkait fasilitas, ketersediaan kamar secara *real-time*, dan sistem pemesanan yang tidak rumit (tanpa perlu login pengguna).
 
 ---
 
-## 🚀 Fitur Utama
+##  Fitur Utama
 
-### 🧑‍💻 Pengguna (Publik)
+###  Pengguna (Publik)
 - **Pencarian Pintar**: Filter kos berdasarkan harga, fasilitas, jenis (putra/putri/campur), dan ketersediaan.
 - **Peta Terintegrasi**: Visualisasi Iframe lokasi kos melalui koordinat Google Maps.
 - **Booking Instan**: Pemesanan kamar tanpa pendaftaran akun. Cukup masukkan nama, kontak WhatsApp, dan tanggal masuk.
 - **Cek Pesanan Mandiri**: Lacak status pesanan menggunakan kombinasi **Kode Booking** dan Nomor WhatsApp secara aman.
 - **Upload Pembayaran**: Unggah bukti transfer (via QRIS) langsung pada halaman progres pesanan.
 
-### 🛡️ Administrator (Dashboard)
+###  Administrator (Dashboard)
 - **Manajemen Properti (Kos)**: Tambah, edit, dan nonaktifkan kos beserta fasilitas dan galerinya.
 - **Manajemen Kamar**: Kontrol *stock* (ketersediaan kamar) dan penyesuaian tipe/harga kamar.
 - **Manajemen Booking**: Menyetujui atau menolak bukti pembayaran dan konfirmasi pesanan (yang akan otomatis memotong *stock* kamar).
@@ -50,7 +50,7 @@ Kos.id dikembangkan (sebagai bagian dari mata kuliah **Interaksi Manusia dan Kom
 
 ---
 
-## 🗄️ Arsitektur Database (ERD)
+##  Arsitektur Database (ERD)
 
 Aplikasi ini menggunakan desain relasional terstruktur. Berikut adalah visualisasi **Entity Relationship Diagram (ERD)** menggunakan sintaks Mermaid:
 
@@ -155,7 +155,7 @@ erDiagram
 
 ---
 
-## ⚙️ Cara Menjalankan Aplikasi (Instalasi Lokal)
+##  Cara Menjalankan Aplikasi (Instalasi Lokal)
 
 ### 1. Prasyarat Sistem
 Pastikan Anda telah memasang:
@@ -214,7 +214,7 @@ Buka browser Anda dan kunjungi `http://localhost:3000`.
 
 ---
 
-## 🔑 Kredensial Akses
+##  Kredensial Akses
 
 | Akses Level | URL / Halaman | Username | Password |
 | :--- | :--- | :--- | :--- |
@@ -223,7 +223,7 @@ Buka browser Anda dan kunjungi `http://localhost:3000`.
 
 ---
 
-## 📈 Pengembangan Lanjutan
+##  Pengembangan Lanjutan
 Aplikasi saat ini berfokus pada **Minimum Viable Product (MVP)**. Potensi peningkatan di masa mendatang meliputi:
 - **Integrasi Payment Gateway**: Midtrans / Xendit untuk *auto-verification* status pembayaran (menggantikan sistem unggah struk manual).
 - **Akun Pengguna Khusus**: Halaman dashboard khusus pengguna (*tenant*) kos untuk fitur penagihan per bulan.
