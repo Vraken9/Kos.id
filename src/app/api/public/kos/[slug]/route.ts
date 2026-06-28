@@ -98,8 +98,9 @@ export async function GET(
     });
   } catch (error) {
     console.error('Error fetching kos detail:', error);
+    const errMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { success: false, error: { code: 'SERVER_ERROR', message: 'Terjadi kesalahan server.' } },
+      { success: false, error: { code: 'SERVER_ERROR', message: `Server Error: ${errMessage}` } },
       { status: 500 }
     );
   }

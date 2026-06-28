@@ -179,8 +179,9 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching kos list:', error);
+    const errMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { success: false, error: { code: 'SERVER_ERROR', message: 'Terjadi kesalahan server.' } },
+      { success: false, error: { code: 'SERVER_ERROR', message: `Server Error: ${errMessage}` } },
       { status: 500 }
     );
   }
