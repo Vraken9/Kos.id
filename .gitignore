@@ -38,3 +38,12 @@ public/uploads/
 
 # PRD docs (not part of app code)
 prd-kos-id/
+
+# AI / Agent instructions & metadata
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.agents/
+.gemini/
+.claude/
+.antigravityignore

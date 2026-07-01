@@ -17,31 +17,31 @@
 
   ---
 
-  **[🌐 Live Demo](https://kos-id.vercel.app/)** | **[🎬 Video Demo](https://drive.google.com/drive/folders/1YPM9ed-75RS2tkQCuKx2zZtkEylDdxZ-?usp=sharing)** | **[📦 Instalasi](#-cara-menjalankan-aplikasi-instalasi-lokal)** | **[🏗️ Arsitektur](#-arsitektur-database-erd)**
+  **[Live Demo](https://kos-id.vercel.app/)** | **[Video Demo](https://drive.google.com/drive/folders/1YPM9ed-75RS2tkQCuKx2zZtkEylDdxZ-?usp=sharing)** | **[Instalasi](#cara-menjalankan-aplikasi-instalasi-lokal)** | **[Arsitektur](#arsitektur-database-erd)**
 
 </div>
 
 ---
 
-## 🌐 Live Demo & Video Demonstrasi
+## Live Demo & Video Demonstrasi
 
 | Sumber | Link |
 | :--- | :--- |
-| **🔗 Website (Production)** | [https://kos-id.vercel.app](https://kos-id.vercel.app/) |
-| **🎬 Video Demo Lengkap** | [Tonton di Google Drive](https://drive.google.com/drive/folders/1YPM9ed-75RS2tkQCuKx2zZtkEylDdxZ-?usp=sharing) |
+| **Website (Production)** | [https://kos-id.vercel.app](https://kos-id.vercel.app/) |
+| **Video Demo Lengkap** | [Tonton di Google Drive](https://drive.google.com/drive/folders/1YPM9ed-75RS2tkQCuKx2zZtkEylDdxZ-?usp=sharing) |
 
 > **Catatan:** Website sudah di-deploy menggunakan **Vercel** (hosting) dan **TiDB Cloud Serverless** (database cloud MySQL-compatible). Anda dapat langsung mengakses website tanpa perlu instalasi apapun.
 
 ---
 
-## 🎯 Tujuan Proyek
+## Tujuan Proyek
 Kos.id dikembangkan (sebagai bagian dari mata kuliah **Interaksi Manusia dan Komputer**) untuk menyelesaikan masalah konvensional pencarian tempat tinggal mahasiswa. Aplikasi ini menargetkan pencarian kos secara spesifik di sekitar kawasan universitas (khususnya *Universitas Ma'arif Nahdlatul Ulama, Kebumen*) dengan memberikan visibilitas penuh terkait fasilitas, ketersediaan kamar secara *real-time*, dan sistem pemesanan yang tidak rumit (tanpa perlu login pengguna).
 
 ---
 
-## ✨ Fitur Utama
+## Fitur Utama
 
-### 👤 Pengguna (Publik)
+### Pengguna (Publik)
 - **Pencarian Pintar**: Filter kos berdasarkan harga, fasilitas, jenis (putra/putri/campur), dan ketersediaan.
 - **Peta Terintegrasi**: Visualisasi Iframe lokasi kos melalui koordinat Google Maps.
 - **Booking Instan**: Pemesanan kamar tanpa pendaftaran akun. Cukup masukkan nama, kontak WhatsApp, dan tanggal masuk.
@@ -51,7 +51,7 @@ Kos.id dikembangkan (sebagai bagian dari mata kuliah **Interaksi Manusia dan Kom
 - **Sorting Cerdas**: Urutkan kos berdasarkan rekomendasi, terdekat, termurah, termahal, dan ketersediaan terbanyak.
 - **Cetak Kwitansi PDF**: Unduh kwitansi pembayaran dalam format PDF setelah booking dikonfirmasi.
 
-### 🛡️ Administrator (Dashboard)
+### Administrator (Dashboard)
 - **Manajemen Properti (Kos)**: Tambah, edit, dan nonaktifkan kos beserta fasilitas dan galerinya.
 - **Manajemen Kamar**: Kontrol *stock* (ketersediaan kamar) dan penyesuaian tipe/harga kamar.
 - **Manajemen Booking**: Menyetujui atau menolak bukti pembayaran dan konfirmasi pesanan (yang akan otomatis memotong *stock* kamar).
@@ -61,7 +61,7 @@ Kos.id dikembangkan (sebagai bagian dari mata kuliah **Interaksi Manusia dan Kom
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## Teknologi yang Digunakan
 
 | Kategori | Teknologi | Deskripsi |
 | :--- | :--- | :--- |
@@ -79,7 +79,7 @@ Kos.id dikembangkan (sebagai bagian dari mata kuliah **Interaksi Manusia dan Kom
 
 ---
 
-## 🏗️ Arsitektur Sistem
+## Arsitektur Sistem
 
 ```
                         Kos.id System Architecture (Production)
@@ -107,7 +107,7 @@ Kos.id dikembangkan (sebagai bagian dari mata kuliah **Interaksi Manusia dan Kom
 
 ---
 
-## 📊 Arsitektur Database (ERD)
+## Arsitektur Database (ERD)
 
 Aplikasi ini menggunakan desain relasional terstruktur. Berikut adalah visualisasi **Entity Relationship Diagram (ERD)** menggunakan sintaks Mermaid:
 
@@ -212,7 +212,7 @@ erDiagram
 
 ---
 
-## 📐 Alur Pemesanan Kos (Booking Flow)
+## Alur Pemesanan Kos (Booking Flow)
 
 ```mermaid
 sequenceDiagram
@@ -248,7 +248,7 @@ sequenceDiagram
 
 ---
 
-## 🚀 Deployment (Production)
+## Deployment (Production)
 
 Aplikasi ini sudah di-deploy dan dapat diakses secara publik:
 
@@ -273,7 +273,7 @@ Aplikasi ini sudah di-deploy dan dapat diakses secara publik:
 
 ---
 
-## 💻 Cara Menjalankan Aplikasi (Instalasi Lokal)
+## Cara Menjalankan Aplikasi (Instalasi Lokal)
 
 ### 1. Prasyarat Sistem
 Pastikan Anda telah memasang:
@@ -338,7 +338,7 @@ Buka browser Anda dan kunjungi `http://localhost:3000`.
 
 ---
 
-## 🔑 Kredensial Akses
+## Kredensial Akses
 
 | Akses Level | URL / Halaman | Username | Password |
 | :--- | :--- | :--- | :--- |
@@ -347,7 +347,7 @@ Buka browser Anda dan kunjungi `http://localhost:3000`.
 
 ---
 
-## 📁 Struktur Direktori Project
+## Struktur Direktori Project
 
 ```
 Kos.id/
@@ -400,7 +400,7 @@ Kos.id/
 
 ---
 
-## ⚡ API Endpoints
+## API Endpoints
 
 ### Public API (Tanpa Autentikasi)
 
@@ -431,7 +431,7 @@ Kos.id/
 
 ---
 
-## 💡 Kelebihan & Kekurangan
+## Kelebihan & Kekurangan
 
 ### Kelebihan
 - **Tanpa Login Pengguna** — Proses booking dirancang se-simpel mungkin, hanya butuh nama dan WhatsApp
@@ -449,7 +449,7 @@ Kos.id/
 
 ---
 
-## 🔮 Pengembangan Lanjutan
+## Pengembangan Lanjutan
 Aplikasi saat ini berfokus pada **Minimum Viable Product (MVP)**. Potensi peningkatan di masa mendatang meliputi:
 - **Integrasi Payment Gateway**: Midtrans / Xendit untuk *auto-verification* status pembayaran (menggantikan sistem unggah struk manual).
 - **Akun Pengguna Khusus**: Halaman dashboard khusus pengguna (*tenant*) kos untuk fitur penagihan per bulan.
@@ -459,7 +459,7 @@ Aplikasi saat ini berfokus pada **Minimum Viable Product (MVP)**. Potensi pening
 
 ---
 
-## 📄 Lisensi
+## Lisensi
 
 Project ini dikembangkan untuk keperluan akademis pada mata kuliah **Interaksi Manusia dan Komputer** — Semester 4.
 
@@ -471,6 +471,6 @@ Project ini dikembangkan untuk keperluan akademis pada mata kuliah **Interaksi M
 
 Dikembangkan dengan Next.js 16, React 19, TiDB Cloud & Vercel
 
-🌐 [kos-id.vercel.app](https://kos-id.vercel.app/)
+[kos-id.vercel.app](https://kos-id.vercel.app/)
 
 </div>
