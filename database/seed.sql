@@ -145,7 +145,6 @@ INSERT INTO room_type_facilities (room_type_id, facility_id) VALUES
 -- ============================================
 INSERT INTO kos_photos (kos_id, image_path, is_cover, sort_order) VALUES
 (1, 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80', 1, 0),
-(1, 'https://images.unsplash.com/photo-1502672260266-1c1e5250ad99?w=800&q=80', 0, 1),
 (2, 'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=800&q=80', 1, 0),
 (2, 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&q=80', 0, 1);
 
