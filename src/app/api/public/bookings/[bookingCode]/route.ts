@@ -69,11 +69,11 @@ export async function GET(
           imageUrl: paymentProof.image_path,
           uploadedAt: paymentProof.uploaded_at,
         } : null,
-        qris: settings ? {
-          imageUrl: settings.qris_image_path,
-          receiverName: settings.payment_receiver_name,
-          instructions: settings.payment_instructions,
-        } : null,
+        qris: {
+          imageUrl: (settings?.qris_image_path as string) || '/images/qris.png',
+          receiverName: (settings?.payment_receiver_name as string) || 'AKHYAR MLIALIF',
+          instructions: (settings?.payment_instructions as string) || 'Scan QRIS DANA di atas dan bayar sesuai total tagihan, lalu upload bukti pembayaran.',
+        },
         statusLogs,
         receiptAvailable: booking.status === 'confirmed',
       },

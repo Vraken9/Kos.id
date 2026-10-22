@@ -14,6 +14,8 @@ INSERT INTO app_settings (
   campus_latitude,
   campus_longitude,
   campus_google_maps_url,
+  qris_image_path,
+  payment_receiver_name,
   payment_instructions
 )
 VALUES (
@@ -23,14 +25,19 @@ VALUES (
   -7.6941216,
   109.6952972,
   'https://maps.app.goo.gl/8s1QU9tmc8GeMypW6?g_st=ic',
-  'Scan QRIS dan bayar sesuai nominal. Setelah itu upload bukti pembayaran.'
+  '/images/qris.png',
+  'AKHYAR MLIALIF',
+  'Scan kode QRIS DANA di atas menggunakan aplikasi DANA, GoPay, OVO, ShopeePay, BCA, atau Mobile Banking lainnya sesuai dengan nominal Total Bayar. Setelah transfer berhasil, silakan upload bukti pembayaran di bawah.'
 )
 ON DUPLICATE KEY UPDATE
   campus_name = VALUES(campus_name),
   campus_address = VALUES(campus_address),
   campus_latitude = VALUES(campus_latitude),
   campus_longitude = VALUES(campus_longitude),
-  campus_google_maps_url = VALUES(campus_google_maps_url);
+  campus_google_maps_url = VALUES(campus_google_maps_url),
+  qris_image_path = VALUES(qris_image_path),
+  payment_receiver_name = VALUES(payment_receiver_name),
+  payment_instructions = VALUES(payment_instructions);
 
 -- ============================================
 -- Facilities (8 default)

@@ -170,15 +170,26 @@ function BookingStatusContent() {
           <Card>
             <CardHeader><CardTitle className="text-base">Pembayaran</CardTitle></CardHeader>
             <CardContent className="space-y-4">
-              {qris?.imageUrl ? (
-                <div className="text-center">
-                  <img src={qris.imageUrl as string} alt="QRIS" className="max-w-xs mx-auto rounded-lg border" />
-                  {(qris.receiverName as string) && <p className="text-sm text-gray-600 mt-2">Penerima: {qris.receiverName as string}</p>}
-                  {(qris.instructions as string) && <p className="text-xs text-gray-500 mt-1">{qris.instructions as string}</p>}
+              <div className="text-center">
+                <div className="inline-block p-4 bg-white rounded-2xl border-2 border-emerald-100 shadow-sm mb-3">
+                  <img
+                    src={(qris?.imageUrl as string) || '/images/qris.png'}
+                    alt="QRIS Pembayaran"
+                    className="w-64 h-64 sm:w-72 sm:h-72 object-contain mx-auto rounded-lg"
+                  />
                 </div>
-              ) : (
-                <p className="text-sm text-amber-600 text-center">QRIS belum dikonfigurasi. Silakan hubungi admin.</p>
-              )}
+                <div className="bg-emerald-50 border border-emerald-200/80 rounded-xl p-3 max-w-sm mx-auto">
+                  <span className="inline-block text-[11px] font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded uppercase tracking-wider mb-1">
+                    QRIS / DANA
+                  </span>
+                  <p className="text-sm font-semibold text-gray-800">
+                    Penerima: {(qris?.receiverName as string) || 'AKHYAR MLIALIF'}
+                  </p>
+                  <p className="text-xs text-gray-600 mt-1">
+                    {(qris?.instructions as string) || 'Scan QRIS di atas via DANA, GoPay, OVO, ShopeePay, BCA, atau Mobile Banking lainnya sesuai total bayar.'}
+                  </p>
+                </div>
+              </div>
 
               <div className="border-t pt-4">
                 <p className="text-sm font-medium text-gray-700 mb-2">Upload Bukti Pembayaran</p>

@@ -26,9 +26,9 @@ export async function GET() {
           googleMapsUrl: settings.campus_google_maps_url,
         },
         payment: {
-          qrisImageUrl: settings.qris_image_path,
-          receiverName: settings.payment_receiver_name,
-          paymentInstructions: settings.payment_instructions,
+          qrisImageUrl: settings.qris_image_path || '/images/qris.png',
+          receiverName: settings.payment_receiver_name || 'AKHYAR MLIALIF',
+          paymentInstructions: settings.payment_instructions || 'Scan QRIS DANA di atas dan bayar sesuai nominal. Setelah itu upload bukti pembayaran.',
         },
       },
     });
