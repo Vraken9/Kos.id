@@ -53,27 +53,56 @@ export async function saveUploadedFile(
   const safeExt = ext || '.jpg';
   const filename = `${category}-${timestamp}-${random}${safeExt}`;
 
-  // Ensure upload directory exists
-  const uploadDir = path.join(process.cwd(), 'public', 'uploads', category);
-  await fs.mkdir(uploadDir, { recursive: true });
-
-  // Save file
-  const filePath = path.join(uploadDir, filename);
   const arrayBuffer = await file.arrayBuffer();
-  await fs.writeFile(filePath, Buffer.from(arrayBuffer));
 
-  return {
-    relativePath: `/uploads/${category}/${filename}`,
-    originalFilename: originalName,
-    mimeType: file.type,
-    fileSize: file.size,
-  };
+  // On Vercel or serverless environment, local disk is read-only (EROFS) and ephemeral.
+  // For payment proofs or whenever on Vercel, store directly as Data URL to ensure persistence.
+  if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || category === 'payment-proofs') {
+    const buffer = Buffer.from(arrayBuffer);
+    const dataUrl = `data:${file.type};base64,${buffer.toString('base64')}`;
+    return {
+      relativePath: dataUrl,
+      originalFilename: originalName,
+      mimeType: file.type,
+      fileSize: file.size,
+    };
+  }
+
+  try {
+    // Ensure upload directory exists
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads', category);
+    await fs.mkdir(uploadDir, { recursive: true });
+
+    // Save file
+    const filePath = path.join(uploadDir, filename);
+    await fs.writeFile(filePath, Buffer.from(arrayBuffer));
+
+    return {
+      relativePath: `/uploads/${category}/${filename}`,
+      originalFilename: originalName,
+      mimeType: file.type,
+      fileSize: file.size,
+    };
+  } catch {
+    // Fallback if local disk write fails for any reason (e.g. read-only filesystem)
+    const buffer = Buffer.from(arrayBuffer);
+    const dataUrl = `data:${file.type};base64,${buffer.toString('base64')}`;
+    return {
+      relativePath: dataUrl,
+      originalFilename: originalName,
+      mimeType: file.type,
+      fileSize: file.size,
+    };
+  }
 }
 
 /**
  * Delete an uploaded file
  */
 export async function deleteUploadedFile(relativePath: string): Promise<void> {
+  if (relativePath.startsWith('data:') || relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+    return;
+  }
   try {
     const fullPath = path.join(process.cwd(), 'public', relativePath);
     await fs.unlink(fullPath);

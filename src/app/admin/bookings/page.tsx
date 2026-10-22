@@ -127,11 +127,9 @@ export default function AdminBookingsPage() {
                         <Eye className="h-3.5 w-3.5 mr-1" />Detail
                       </Button>
                       {Boolean(b.payment_proof_url) && (
-                        <a href={b.payment_proof_url as string} target="_blank" rel="noopener noreferrer">
-                          <Button size="sm" variant="secondary">
-                            <Eye className="h-3.5 w-3.5 mr-1" />Lihat Bukti
-                          </Button>
-                        </a>
+                        <Button size="sm" variant="secondary" onClick={() => setDetailBooking(b)}>
+                          <Eye className="h-3.5 w-3.5 mr-1" />Lihat Bukti
+                        </Button>
                       )}
                       {b.status === 'waiting_confirmation' && (
                         <>
@@ -238,6 +236,18 @@ export default function AdminBookingsPage() {
                 <div className="bg-gray-50 border rounded-lg p-3">
                   <span className="text-gray-500 block text-xs">Catatan Admin</span>
                   <p className="font-medium mt-1">{detailBooking.admin_note as string}</p>
+                </div>
+              )}
+              {Boolean(detailBooking.payment_proof_url) && (
+                <div className="border-t pt-4">
+                  <span className="text-gray-500 block mb-2 font-medium">Bukti Pembayaran</span>
+                  <div className="border rounded-xl p-3 bg-gray-50 text-center">
+                    <img
+                      src={detailBooking.payment_proof_url as string}
+                      alt="Bukti Pembayaran"
+                      className="max-h-80 object-contain rounded-lg mx-auto border bg-white shadow-sm"
+                    />
+                  </div>
                 </div>
               )}
             </div>

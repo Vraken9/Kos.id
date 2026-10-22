@@ -105,8 +105,9 @@ export async function POST(
       );
     }
     console.error('Error uploading payment proof:', error);
+    const msg = error instanceof Error ? error.message : 'Terjadi kesalahan server.';
     return NextResponse.json(
-      { success: false, error: { code: 'SERVER_ERROR', message: 'Terjadi kesalahan server.' } },
+      { success: false, error: { code: 'SERVER_ERROR', message: `Gagal upload bukti pembayaran: ${msg}` } },
       { status: 500 }
     );
   }
